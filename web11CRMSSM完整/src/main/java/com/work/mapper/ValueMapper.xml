@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.mapper.ValueMapper">
+
+    <cache />
+
+    <resultMap id="valueMap" type="com.work.beans.Value">
+        <id property="id" column="id"/>
+        <result property="value" column="value"/>
+        <result property="text" column="text"/>
+        <result property="orderNo" column="orderNo"/>
+        <result property="typeCode" column="typeCode"/>
+
+        <association property="type" javaType="com.work.beans.Type">
+            <id property="code" column="code"/>
+            <result property="name" column="name"/>
+            <result property="description" column="description"/>
+        </association>
+    </resultMap>
+
+<select id="get" resultMap="valueMap" useCache="false">
+      SELECT
+	t.`code` AS `code`,
+	t.`name` AS `name`,
+	t.description AS description,
+	v.id AS id,
+	v.`value` AS `value`,
+	v.text AS text,
+	v.orderNo AS orderNo,
+	v.typeCode AS typeCode
+FROM
+	tbl_dictionary_type AS t
+	INNER JOIN
+	tbl_dictionary_value AS v
+	ON
+		t.`code` = v.typeCode
+where
+v.id=#{id}
+    </select>
+
+    <select id="getAll" resultMap="valueMap" useCache="false">
+   SELECT
+	t.`code` AS `code`,
+	t.`name` AS `name`,
+	t.description AS description,
+	v.id AS id,
+	v.`value` AS `value`,
+	v.text AS text,
+	v.orderNo AS orderNo,
+	v.typeCode AS typeCode
+FROM
+	tbl_dictionary_type AS t
+	INNER JOIN
+	tbl_dictionary_value AS v
+	ON
+		t.`code` = v.typeCode
+order by t.`name` , v.orderNo
+    </select>
+
+    <update id="edit">
+update tbl_dictionary_value set
+value=#{value},
+text=#{text},
+orderNo=#{orderNo},
+typeCode=#{typeCode}
+where
+id=#{id}
+    </update>
+
+    <insert id="save">
+insert  into tbl_dictionary_value
+(
+id,
+value,
+text,
+orderNo,
+typeCode
+)
+values
+(
+#{id},
+#{value},
+#{text},
+#{orderNo},
+#{typeCode}
+)
+    </insert>
+
+    <delete id="delete">
+      delete from tbl_dictionary_value where id in
+      <foreach collection="array" item="id" open="(" close=")" separator=",">
+          #{id}
+      </foreach>
+    </delete>
+</mapper>

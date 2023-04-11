@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.mapper.TypeMapper">
+
+    <select id="get" resultType="com.work.beans.Type">
+      SELECT * from tbl_dictionary_type where code=#{id}
+    </select>
+
+    <select id="getAll" resultType="com.work.beans.Type">
+     SELECT * from tbl_dictionary_type
+    </select>
+
+    <update id="edit">
+    update  tbl_dictionary_type set
+    name=#{name},
+    description =#{description}
+    where code=#{code}
+    </update>
+
+    <insert id="save">
+    insert into  tbl_dictionary_type
+    (
+    code,
+    name,
+    description
+    )
+    values
+    (
+    #{code},
+    #{name},
+    #{description}
+    )
+    </insert>
+
+    <delete id="delete">
+      delete from tbl_dictionary_type where code in
+      <foreach collection="array" item="id" open="(" close=")" separator=",">
+          #{id}
+      </foreach>
+    </delete>
+</mapper>

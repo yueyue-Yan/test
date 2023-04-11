@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.mapper.ActivityMapper">
+
+    <sql id="searchSQL">
+        <where>
+            <if test="searchMap.name!=null and searchMap.name!=''">
+                and name like '%' #{searchMap.name} '%'
+            </if>
+            <if test="searchMap.owner!=null and searchMap.owner!=''">
+                and owner like '%' #{searchMap.owner} '%'
+            </if>
+            <if test="searchMap.startDate!=null and searchMap.startDate!=''">
+                and startDate=#{searchMap.startDate}
+            </if>
+            <if test="searchMap.endDate!=null and searchMap.endDate!=''">
+                and endDate=#{searchMap.endDate}
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="actMap" type="com.work.beans.Activity">
+       <!--因为beans中Activity实体类的字段名与数据库Activity表格字段名完全一致，所以可以省略不写-->
+        <!--column="id"是activity表的主键字段名称：表示remark表的外键是activity表的主键即id-->
+        <collection
+                property="remarks"
+                select="com.work.mapper.ActRemarkMapper.getAllByMarketingActivitiesId"
+                column="id">
+        </collection>
+    </resultMap>
+
+    <select id="getAll" resultType="com.work.beans.Activity">
+        select * from tbl_marketing_activities
+        <include refid="searchSQL"/>
+        limit #{startIndex},#{rowsPerPage}
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(*) from tbl_marketing_activities
+        <include refid="searchSQL"/>
+    </select>
+
+    <select id="get" resultType="com.work.beans.Activity">
+        SELECT * from tbl_marketing_activities
+        where id=#{id}
+    </select>
+
+
+    <select id="getRemarks" resultMap="actMap">
+        SELECT * from tbl_marketing_activities
+        where id=#{id}
+    </select>
+
+    <insert id="save">
+    insert  into tbl_marketing_activities
+    (
+    id,
+    owner,
+    name,
+    startDate,
+    endDate,
+    cost,
+    description,
+    createBy,
+    createTime,
+    editBy,
+    editTime
+    )
+    values
+    (
+    #{id},
+    #{owner},
+    #{name},
+    #{startDate},
+    #{endDate},
+    #{cost},
+    #{description},
+    #{createBy},
+    #{createTime},
+    #{editBy},
+    #{editTime}
+    )
+    </insert>
+
+    <update id="edit" >
+
+update  tbl_marketing_activities set
+owner=#{owner},
+name=#{name},
+startDate=#{startDate},
+endDate=#{endDate},
+cost=#{cost},
+description=#{description},
+editBy=#{editBy},
+editTime=#{editTime}
+where  id=#{id}
+
+    </update>
+
+    <delete id="delete">
+        delete  from tbl_marketing_activities
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </delete>
+
+
+
+
+
+
+
+</mapper>

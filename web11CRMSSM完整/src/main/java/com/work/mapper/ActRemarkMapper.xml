@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.mapper.ActRemarkMapper">
+
+    <select id="getAllByMarketingActivitiesId" resultType="com.work.beans.ActRemark">
+        select * from tbl_marketing_activities_remark
+        where marketingActivitiesId=#{marketingActivitiesId}
+        order by noteTime desc 
+    </select>
+
+    <delete id="deleteRemarks">
+        delete from tbl_marketing_activities_remark
+        where id=#{id}
+    </delete>
+
+    <update id="editRemark">
+      update tbl_marketing_activities_remark
+      set
+        noteContent=#{noteContent},
+        editPerson=#{editPerson},
+        editTime=#{editTime},
+        editFlag=#{editFlag}
+      where
+        id=#{id}
+      </update>
+
+    <insert id="saveRemark">
+        insert into tbl_marketing_activities_remark
+        (
+        id,
+        notePerson,
+        noteContent,
+        noteTime,
+        marketingActivitiesId
+        )
+        values
+        (
+        #{id},
+        #{notePerson},
+        #{noteContent},
+        #{noteTime},
+        #{marketingActivitiesId}
+        )
+    </insert>
+</mapper>

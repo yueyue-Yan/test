@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.mapper.ChartMapper">
+<!--注意返回值是int不是list，resultType表示的是容器里元素的类型，或者单值的类型-->
+    <select id="activityChart" resultType="int">
+
+    <foreach collection="months" item="month" separator="union all">
+        select IFNULL(sum(cost),0) from tbl_marketing_activities
+        where year(startDate)=#{year} and month(startDate)=#{month}
+    </foreach>
+
+    </select>
+
+    <!--mybatis动态sql语句的强大之处↑代替↓-->
+    <!--<select id="activityChart" resultType="int">-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=1-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=2-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=3-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=4-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=5-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=6-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=7-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=8-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=9-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=10-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=11-->
+        <!--union all-->
+        <!--select IFNULL(sum(cost),0) from tbl_marketing_activities-->
+        <!--where year(startDate)=#{year} and month(startDate)=12-->
+    <!--</select>-->
+
+</mapper>

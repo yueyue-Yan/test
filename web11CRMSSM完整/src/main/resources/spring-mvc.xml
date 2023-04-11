@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--扫描组件，让Spring托管-->
+    <context:component-scan base-package="com.work.controller"/>
+    <!--启用注解驱动-->
+    <mvc:annotation-driven/>
+
+
+    <!--视图解析器-->
+    <!--前缀目录为：/WEB-INF/jsp/-->
+    <!--后缀扩展名为：.jsp-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!--如果发现是静态资源的请求，就将该请求转由Web应用服务器默认的Servlet处理-->
+    <mvc:default-servlet-handler/>
+
+    <!--拦截器配置-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--过滤所有界面-->
+            <mvc:mapping path="/**"/>
+            <!--指定界面不过滤-->
+            <mvc:exclude-mapping path="/user/loginView"/>
+            <mvc:exclude-mapping path="/user/login.do"/>
+            <mvc:exclude-mapping path="/"/>
+            <!--拦截器所在位置-->
+            <bean class="com.work.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--开启@Aspect注解-->
+    <!--如果要切控制器-->
+    <!--这里要注意，写在SpringMVC的配置里面-->
+    <!--xmlns:aop="http://www.springframework.org/schema/aop"-->
+    <!--proxy-target-class="true"开启CGLIB代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+
+</beans>

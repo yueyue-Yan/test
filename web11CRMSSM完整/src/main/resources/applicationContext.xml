@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--1. 扫描组件，让Spring托管-->
+    <context:component-scan base-package="com.work"/>
+
+
+    <!--开启@Aspect注解-->
+    <!--如果要切控制器-->
+    <!--这里要注意，写在SpringMVC的配置里面-->
+    <!--xmlns:aop="http://www.springframework.org/schema/aop"-->
+    <!--proxy-target-class="true"开启CGLIB代理-->
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--加载配置-->
+    <!--
+    ignore-unresolvable为true时，配置文件${}找不到对应占位符的值，直接赋值'${}'
+    -->
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+    <!--配置数据源druid-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--driverClassName可以不写，智能匹配-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--整合MyBatis-->
+    <!-- 配置 SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--读取mybatis的主配置-->
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+        <!--衔接数据源，目前使用的是数据库连接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--批量起别名,放在beans包中【也就是实体】-->
+        <property name="typeAliasesPackage" value="com.work.beans"/>
+    </bean>
+    <!-- 配置Spring整合MyBatis，扫描包 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--注册MyBatis的映射文件-->
+        <property name="basePackage" value="com.work.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+</beans>
